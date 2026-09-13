@@ -163,6 +163,9 @@
     border-bottom:2px solid transparent;
   }
   .nav a.link:hover{ color:var(--parchment); border-bottom-color:var(--pumpkin); }
+  .nav-ico{ display:inline-flex; align-items:center; color:var(--muted); }
+  .nav-ico:hover{ color:var(--pumpkin); }
+  .nav-ico svg{ width:18px; height:18px; fill:currentColor; }
 
   /* ---------- Hero ---------- */
   .hero{
@@ -246,23 +249,56 @@
   .addr{ margin-top:4px; font-size:1.05rem; }
   .addr strong{ color:var(--parchment); }
 
+  /* This Year's Poster */
+  #poster{ text-align:center; }
+  .year-poster{
+    width:auto; height:auto; max-width:min(380px, 82vw); margin:0 auto;
+    border:1px solid var(--ink-3); border-radius:4px;
+    box-shadow:0 20px 55px rgba(0,0,0,.55);
+  }
+  .poster-lead{ margin:26px auto 0; max-width:52ch; color:var(--muted); }
+
   /* Gallery */
-  .gallery{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+  .gallery{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:8px; }
   .poster{
-    aspect-ratio:3/4; border:1px solid var(--ink-3); border-radius:3px;
-    background:
-      repeating-linear-gradient(45deg, rgba(240,138,29,.05) 0 12px, transparent 12px 24px),
-      var(--ink-2);
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    color:var(--muted); text-align:center; padding:16px; gap:6px;
+    position:relative; display:block; width:100%; padding:0; margin:0;
+    aspect-ratio:5/7; border:1px solid var(--ink-3); border-radius:3px;
+    overflow:hidden; background:#0d0a14; cursor:zoom-in;
+    font:inherit; color:inherit; transition:transform .15s, border-color .15s;
   }
-  .poster .yr{ font-family:"Cinzel",serif; font-size:1.3rem; color:var(--parchment); font-weight:700; }
-  .poster .note{ font-size:.78rem; letter-spacing:.08em; text-transform:uppercase; }
-  .placeholder-msg{
-    margin-top:18px; font-size:.95rem; color:var(--spectral);
-    border:1px dashed var(--ink-3); border-radius:3px; padding:14px 18px;
-    max-width:66ch;
+  .poster img{ width:100%; height:100%; object-fit:contain; }
+  .poster:hover, .poster:focus-visible{ transform:translateY(-3px); border-color:var(--pumpkin); }
+  .poster .yr{
+    position:absolute; left:0; right:0; bottom:0;
+    font-family:"Cinzel",serif; font-size:.9rem; font-weight:700;
+    color:var(--parchment); text-align:center; padding:16px 6px 7px;
+    background:linear-gradient(transparent, rgba(10,7,16,.85) 55%);
   }
+
+  /* Lightbox */
+  .lb{
+    position:fixed; inset:0; z-index:100; display:none;
+    align-items:center; justify-content:center; padding:24px;
+    background:rgba(8,6,12,.93); backdrop-filter:blur(3px);
+  }
+  .lb.open{ display:flex; }
+  .lb figure{ margin:0; text-align:center; max-width:100%; }
+  .lb img{
+    max-width:min(92vw,640px); max-height:82vh;
+    border:1px solid var(--ink-3); border-radius:4px;
+    box-shadow:0 24px 60px rgba(0,0,0,.6);
+  }
+  .lb figcaption{
+    margin-top:14px; font-family:"Cinzel",serif; letter-spacing:.14em;
+    text-transform:uppercase; font-size:.8rem; color:var(--spectral);
+  }
+  .lb-close{
+    position:absolute; top:14px; right:18px;
+    background:transparent; border:1px solid var(--ink-3); border-radius:3px;
+    color:var(--parchment); font-size:1.4rem; line-height:1; cursor:pointer;
+    width:42px; height:42px;
+  }
+  .lb-close:hover{ border-color:var(--pumpkin); color:var(--pumpkin); }
 
   /* FAQ */
   .faq-list{ display:flex; flex-direction:column; gap:12px; margin-top:8px; }
@@ -297,11 +333,15 @@
   footer{ text-align:center; padding-block:44px; color:var(--muted); font-size:.9rem; }
   footer .origin{ max-width:62ch; margin:0 auto 10px; }
 
+  @media (max-width:900px){
+    .gallery{ grid-template-columns:repeat(3,1fr); }
+  }
   @media (max-width:720px){
     .gallery{ grid-template-columns:repeat(2,1fr); }
     .dir-list{ grid-template-columns:1fr; }
     .beat{ grid-template-columns:1fr; gap:8px; }
     .beat .when{ font-size:1.25rem; }
+    .poster-feature{ gap:26px; }
   }
 </style>
 </head>
@@ -310,17 +350,23 @@
 <nav class="nav">
   <div class="nav-inner">
     <a class="brand" href="#top">Collinsville <span>Halloween</span></a>
+    <a class="link" href="#poster">This Year</a>
     <a class="link" href="#details">The Night</a>
     <a class="link" href="#directions">Directions</a>
     <a class="link" href="#gallery">Gallery</a>
     <a class="link" href="#faq">FAQ</a>
     <a class="link" href="#contact">Contact</a>
+    <a class="nav-ico" href="https://instagram.com/cvilleartparty" target="_blank" rel="noopener" aria-label="Instagram">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2c3.2 0 3.6 0 4.9.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.86s0 3.6-.07 4.86c-.05 1.17-.25 1.8-.41 2.23a3.7 3.7 0 0 1-.9 1.38c-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.86.07s-3.6 0-4.86-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 0 1-1.38-.9 3.7 3.7 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.2 15.6 2.2 15.2 2.2 12s0-3.6.07-4.86c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.4 2.2 8.8 2.2 12 2.2Zm0 1.8c-3.15 0-3.52.01-4.76.07-.9.04-1.38.19-1.7.32-.43.17-.74.37-1.06.69-.32.32-.52.63-.69 1.06-.13.32-.28.8-.32 1.7-.06 1.24-.07 1.61-.07 4.76s.01 3.52.07 4.76c.04.9.19 1.38.32 1.7.17.43.37.74.69 1.06.32.32.63.52 1.06.69.32.13.8.28 1.7.32 1.24.06 1.61.07 4.76.07s3.52-.01 4.76-.07c.9-.04 1.38-.19 1.7-.32.43-.17.74-.37 1.06-.69.32-.32.52-.63.69-1.06.13-.32.28-.8.32-1.7.06-1.24.07-1.61.07-4.76s-.01-3.52-.07-4.76c-.04-.9-.19-1.38-.32-1.7a2.85 2.85 0 0 0-.69-1.06 2.85 2.85 0 0 0-1.06-.69c-.32-.13-.8-.28-1.7-.32-1.24-.06-1.61-.07-4.76-.07Zm0 3.06a4.94 4.94 0 1 1 0 9.88 4.94 4.94 0 0 1 0-9.88Zm0 1.8a3.14 3.14 0 1 0 0 6.28 3.14 3.14 0 0 0 0-6.28Zm5.14-.87a1.15 1.15 0 1 1 0 2.3 1.15 1.15 0 0 1 0-2.3Z"/></svg>
+    </a>
+    <a class="nav-ico" href="https://facebook.com/collinsvillehalloween" target="_blank" rel="noopener" aria-label="Facebook">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5 3.66 9.14 8.44 9.94v-7.03H7.9v-2.9h2.54V9.85c0-2.52 1.5-3.91 3.78-3.91 1.1 0 2.24.2 2.24.2v2.47h-1.26c-1.24 0-1.63.78-1.63 1.57v1.88h2.78l-.44 2.9h-2.34V22c4.78-.8 8.44-4.94 8.44-9.94Z"/></svg>
+    </a>
   </div>
 </nav>
 
 <header class="hero" id="top">
   <div class="wrap">
-    <div class="eyebrow">Annual Halloween Event &middot; Collinsville, Connecticut 06019</div>
     <h1>33rd Annual Collinsville <em>Halloween Parade</em></h1>
 
     <div class="date-badge">
@@ -339,11 +385,18 @@
   </div>
 </header>
 
+<section id="poster">
+  <div class="wrap">
+    <img class="year-poster" src="images/poster-2026.jpg" width="957" height="1400"
+         alt="Hand-drawn 2026 Collinsville Halloween Parade poster: a winged cat above a PARADE banner, flanked by skeletons, with the words See You There and October 31st.">
+  </div>
+</section>
+
 <section id="details">
   <div class="wrap">
     <div class="kicker">The Night Of</div>
     <h2 class="sec-title">Join the Parade</h2>
-    <p class="lead-p">On Saturday, October 31, beginning at 6:00 p.m., the main streets in Collinsville will close to traffic and open to all who are brave and daring enough to join in the 31st annual Collinsville Halloween Parade.</p>
+    <p class="lead-p">On Saturday, October 31, beginning at 6:00 p.m., the main streets in Collinsville will close to traffic and open to all who are brave and daring enough to join in the 33rd annual Collinsville Halloween Parade.</p>
 
     <div class="timeline">
       <div class="beat">
@@ -356,7 +409,7 @@
       </div>
       <div class="beat">
         <div class="when">Prizes<small>Costumes</small></div>
-        <p>Judges of Doom will be searching for the scariest, most original, and funniest costumes of the night.</p>
+        <p>Judges of Doom will be searching for the scariest, most original, and funniest costumes of the night. There is also a screaming contest.</p>
       </div>
     </div>
   </div>
@@ -366,7 +419,7 @@
   <div class="wrap">
     <div class="kicker">Getting Here</div>
     <h2 class="sec-title">Directions &amp; Parking</h2>
-    <p class="addr">The parade centers on <strong>105 Main St, Collinsville, CT 06019</strong>. Village streets close to vehicles on parade night, so arrive early and park on the edges of downtown.</p>
+    <p class="addr">The parade starts on <strong>Main St. in front of the Canton Historical Museum</strong>. Village streets close to vehicles on parade night, so arrive early and park on the edges of town.</p>
 
     <div class="cta-row" style="justify-content:flex-start;margin-top:16px;">
       <a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=105+Main+St+Collinsville+CT+06019" target="_blank" rel="noopener">Open in Google Maps</a>
@@ -401,18 +454,25 @@
   <div class="wrap">
     <div class="kicker">Through the Years</div>
     <h2 class="sec-title">Poster Gallery</h2>
-    <p>Decades of hand-made parade posters. The tiles below are a placeholder layout while we bring in your real posters.</p>
 
     <div class="gallery">
-      <div class="poster"><span class="yr">2025</span><span class="note">Poster</span></div>
-      <div class="poster"><span class="yr">2024</span><span class="note">Poster</span></div>
-      <div class="poster"><span class="yr">2023</span><span class="note">Poster</span></div>
-      <div class="poster"><span class="yr">2022</span><span class="note">Poster</span></div>
-      <div class="poster"><span class="yr">2021</span><span class="note">Poster</span></div>
-      <div class="poster"><span class="yr">&amp; more</span><span class="note">Archive</span></div>
+      <button class="poster" data-full="images/poster-2023.jpg" data-cap="2023 &middot; 30th Annual"><img src="images/poster-2023.jpg" loading="lazy" alt="2023 Collinsville Halloween Parade poster"><span class="yr">2023</span></button>
+      <button class="poster" data-full="images/poster-2018.jpg" data-cap="2018 &middot; 25th Annual"><img src="images/poster-2018.jpg" loading="lazy" alt="2018 Collinsville Halloween Parade poster"><span class="yr">2018</span></button>
+      <button class="poster" data-full="images/poster-2017.jpg" data-cap="2017"><img src="images/poster-2017.jpg" loading="lazy" alt="2017 Collinsville Halloween Parade poster"><span class="yr">2017</span></button>
+      <button class="poster" data-full="images/poster-2016.jpg" data-cap="2016"><img src="images/poster-2016.jpg" loading="lazy" alt="2016 Collinsville Halloween Parade poster"><span class="yr">2016</span></button>
+      <button class="poster" data-full="images/poster-2015.jpg" data-cap="2015"><img src="images/poster-2015.jpg" loading="lazy" alt="2015 Collinsville Halloween Parade poster"><span class="yr">2015</span></button>
+      <button class="poster" data-full="images/poster-2014.jpg" data-cap="2014"><img src="images/poster-2014.jpg" loading="lazy" alt="2014 Collinsville Halloween Parade poster"><span class="yr">2014</span></button>
+      <button class="poster" data-full="images/poster-2013.jpg" data-cap="2013 &middot; 20th Annual"><img src="images/poster-2013.jpg" loading="lazy" alt="2013 Collinsville Halloween Parade poster"><span class="yr">2013</span></button>
+      <button class="poster" data-full="images/poster-2012.jpg" data-cap="2012"><img src="images/poster-2012.jpg" loading="lazy" alt="2012 Collinsville Halloween Parade poster"><span class="yr">2012</span></button>
+      <button class="poster" data-full="images/poster-2011.jpg" data-cap="2011"><img src="images/poster-2011.jpg" loading="lazy" alt="2011 Collinsville Halloween Parade poster"><span class="yr">2011</span></button>
+      <button class="poster" data-full="images/poster-2010.jpg" data-cap="2010"><img src="images/poster-2010.jpg" loading="lazy" alt="2010 Collinsville Halloween Parade poster"><span class="yr">2010</span></button>
+      <button class="poster" data-full="images/poster-2007.jpg" data-cap="2007"><img src="images/poster-2007.jpg" loading="lazy" alt="2007 Collinsville Halloween Parade poster"><span class="yr">2007</span></button>
+      <button class="poster" data-full="images/poster-2005.jpg" data-cap="2005"><img src="images/poster-2005.jpg" loading="lazy" alt="2005 Collinsville Halloween Parade poster"><span class="yr">2005</span></button>
+      <button class="poster" data-full="images/poster-1997.jpg" data-cap="1997"><img src="images/poster-1997.jpg" loading="lazy" alt="1997 Collinsville Halloween Parade poster"><span class="yr">1997</span></button>
+      <button class="poster" data-full="images/poster-undated-1.jpg" data-cap="The Fear Is Here"><img src="images/poster-undated-1.jpg" loading="lazy" alt="Vintage Collinsville Halloween Parade poster, The Fear Is Here"><span class="yr">Vintage</span></button>
+      <button class="poster" data-full="images/poster-undated-2.jpg" data-cap="Friday, Oct 30"><img src="images/poster-undated-2.jpg" loading="lazy" alt="Vintage Collinsville Halloween Parade poster"><span class="yr">Vintage</span></button>
+      <button class="poster" data-full="images/poster-undated-3.jpg" data-cap="Collinsville Halloween Parade"><img src="images/poster-undated-3.jpg" loading="lazy" alt="Vintage Collinsville Halloween Parade poster"><span class="yr">Vintage</span></button>
     </div>
-
-    <div class="placeholder-msg">Hand me the poster image files (or a working link to the current gallery) and I will drop the real artwork straight into this grid.</div>
   </div>
 </section>
 
@@ -471,9 +531,48 @@
 <footer>
   <div class="wrap">
     <p class="origin">The Collinsville Halloween Parade began in 1994, started by Jon Squier and other members of the community. It has marched down Main Street every year since.</p>
-    <p>&copy; 2026 Collinsville Halloween Parade &middot; Collinsville, Connecticut 06019</p>
+    <div class="eyebrow" style="margin:22px 0 8px;">Annual Halloween Event &middot; Collinsville, Connecticut 06019</div>
+    <p>&copy; 2026 Collinsville Halloween Parade</p>
   </div>
 </footer>
+
+<div class="lb" id="lightbox" role="dialog" aria-modal="true" aria-label="Poster viewer">
+  <button class="lb-close" id="lbClose" aria-label="Close">&times;</button>
+  <figure>
+    <img id="lbImg" src="" alt="">
+    <figcaption id="lbCap"></figcaption>
+  </figure>
+</div>
+
+<script>
+(function(){
+  var lb = document.getElementById('lightbox');
+  var lbImg = document.getElementById('lbImg');
+  var lbCap = document.getElementById('lbCap');
+  var lastFocus = null;
+  function open(btn){
+    lastFocus = btn;
+    lbImg.src = btn.getAttribute('data-full');
+    lbImg.alt = btn.querySelector('img').alt;
+    lbCap.innerHTML = btn.getAttribute('data-cap') || '';
+    lb.classList.add('open');
+    document.getElementById('lbClose').focus();
+  }
+  function close(){
+    lb.classList.remove('open');
+    lbImg.src = '';
+    if(lastFocus){ lastFocus.focus(); }
+  }
+  document.querySelectorAll('.poster').forEach(function(b){
+    b.addEventListener('click', function(){ open(b); });
+  });
+  document.getElementById('lbClose').addEventListener('click', close);
+  lb.addEventListener('click', function(e){ if(e.target === lb){ close(); } });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && lb.classList.contains('open')){ close(); }
+  });
+})();
+</script>
 
 </body>
 </html>
